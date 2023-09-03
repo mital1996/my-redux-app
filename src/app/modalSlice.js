@@ -12,6 +12,7 @@ const handlePayload = ({ payload: data }) => ({
 
 const initialState = {
   standard: emptyObj,
+  delete:emptyObj
 };
 
 export const modalSlice = createSlice({
