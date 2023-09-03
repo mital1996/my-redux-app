@@ -1,56 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { React, Suspense, lazy } from "react";
+import { useSelector } from "react-redux";
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+const Login = lazy(() => import("./pages/Login"));
+const HomeScreen = lazy(() => import("./pages/HomeScreen"));
+
+const DeleteModal = lazy(() => import("./component/modal/delete"));
+const StandardModal = lazy(() => import("./component/modal/standard"));
 
 function App() {
+  const modal = useSelector((state) => state?.modal);
+  // console.log("data>>>>", modal.delete.data);
+  const router = createBrowserRouter([
+    { path: "/", element: <Login /> },
+    { path: "/dashboard", element: <HomeScreen /> },
+  ]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <Suspense>
+        <RouterProvider router={router} />
+
+        {modal?.standard?.open && (
+          <StandardModal data={modal?.standard?.data} />
+        )}
+        <DeleteModal data={modal?.delete?.data} />
+      </Suspense>
     </div>
   );
 }
